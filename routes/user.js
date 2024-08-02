@@ -1,13 +1,13 @@
-const express = require('express')
+const express = require('express');
+const router = express.Router();
 
-const router = express.Router()
+const { register } = require('../controller/register');
+const { login } = require('../controller/login');
+const { authenticateToken, validateUser } = require('../controller/authController');
 
-const { register } = require('../controller/register')
+// Route handlers
+router.post('/register', register);
+router.post('/login', login);
+router.get('/validate', authenticateToken, validateUser);
 
-const { login } = require('../controller/login')
-
-router.post('/register', register)
-
-router.post('/login', login)
-
-module.exports = router
+module.exports = router;

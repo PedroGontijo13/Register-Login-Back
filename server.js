@@ -1,39 +1,39 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-const app = express()
+dotenv.config(); // Load environment variables
 
-app.use(express.json())
-app.use(cors())
+const app = express();
 
-const port = process.env.PORT || 8080
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 
-require("./configs/dotenv");
-const client = require("./configs/database");
+const port = process.env.PORT || 8080;
 
-client.connect((err) => { //Connected Database
+// Database connection
+const client = require('./configs/database');
 
+client.connect((err) => {
     if (err) {
-
-        console.log(err);
-
+        console.error('Database connection error:', err);
+    } else {
+        console.log('Database connected successfully!');
     }
-
-    else {
-
-        console.log("Data logging initiated!");
-    }
-
 });
 
-const user = require("./routes/user");
+// Import and use routes
+const userRoutes = require('./routes/user');
+app.use('/user', userRoutes);
 
-app.use("/user", user);
-
+// Basic route
 app.get('/', (req, res) => {
-    res.status(200).send("Its on")
-})
+    res.status(200).send("It's on");
+});
 
+// Start the server
 app.listen(port, () => {
-    console.log(`Here we go, Engines started at ${port}.`);
-})
+    console.log(`Server is running on port ${port}`);
+});
